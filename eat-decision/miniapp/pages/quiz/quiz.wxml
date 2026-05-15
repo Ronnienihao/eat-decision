@@ -1,0 +1,83 @@
+<!-- pages/quiz/quiz.wxml - 偏好筛选页 -->
+<view class="container quiz-container">
+
+  <!-- 顶部进度 -->
+  <view class="progress-bar">
+    <view class="progress-steps">
+      <block wx:for="{{totalSteps}}" wx:key="index">
+        <view class="step-dot {{index < currentStep ? 'done' : ''}} {{index === currentStep ? 'active' : ''}}"></view>
+      </block>
+    </view>
+    <view class="hint-text progress-hint">遵从直觉选择</view>
+  </view>
+
+  <!-- 题目卡片 -->
+  <view class="card question-card fade-in-up" wx:if="{{currentQuestion}}">
+    
+    <!-- 题目 -->
+    <view class="question-text title-lg">{{currentQuestion.question}}</view>
+
+    <!-- 二选一（Q01/Q02/Q03） -->
+    <block wx:if="{{currentQuestion.type === 'binary'}}">
+      <view class="options-binary">
+        <view
+          class="option-btn {{selectedOption === 'A' ? 'option-selected' : ''}}"
+          bindtap="onSelect"
+          data-option="A"
+          data-value="{{currentQuestion.options[0].value}}"
+        >
+          <text class="option-label">{{currentQuestion.options[0].label}}</text>
+        </view>
+        <view class="option-vs">VS</view>
+        <view
+          class="option-btn {{selectedOption === 'B' ? 'option-selected' : ''}}"
+          bindtap="onSelect"
+          data-option="B"
+          data-value="{{currentQuestion.options[1].value}}"
+        >
+          <text class="option-label">{{currentQuestion.options[1].label}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 三选一（Q04/Q05） -->
+    <block wx:if="{{currentQuestion.type === 'triple'}}">
+      <view class="options-triple">
+        <view
+          wx:for="{{currentQuestion.options}}"
+          wx:key="id"
+          class="option-triple-btn {{selectedOption === item.id ? 'option-selected' : ''}}"
+          bindtap="onSelectTriple"
+          data-option="{{item.id}}"
+          data-value="{{item.value}}"
+        >
+          <text class="option-label">{{item.label}}</text>
+        </view>
+      </view>
+      <!-- 换一组按钮 -->
+      <view class="refresh-btn {{refreshUsed ? 'refresh-disabled' : ''}}" bindtap="onRefreshOptions">
+        <text>{{refreshUsed ? '已换过一次 ✓' : '🔄 换一组'}}</text>
+      </view>
+    </block>
+
+  </view>
+
+  <!-- 下一题按钮 -->
+  <view class="next-btn-area" wx:if="{{selectedOption}}">
+    <button class="btn-primary fade-in-up" bindtap="onNext">
+      {{isLastStep ? '好了，开始决斗！🔥' : '下一题 →'}}
+    </button>
+  </view>
+
+  <!-- 催促提示 Toast -->
+  <view class="urge-toast {{showUrgeToast ? 'toast-show' : ''}}">
+    别想了，胃比脑子诚实
+  </view>
+
+  <!-- 催促气泡（10秒） -->
+  <view class="urge-bubble {{showUrgeBubble ? 'bubble-show' : ''}}">
+    <view class="bubble-text">你已经盯着它 10 秒了！饿着肚子做决定会更痛苦</view>
+    <view class="bubble-close" bindtap="onCloseBubble">好好好我选了</view>
+  </view>
+
+</view>

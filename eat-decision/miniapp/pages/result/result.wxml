@@ -1,0 +1,28 @@
+<!-- pages/result/result.wxml - 结果页 -->
+<view class="container result-container">
+
+  <!-- 顶部装饰 -->
+  <view class="result-crown fade-in-up">🏆</view>
+  <view class="result-label hint-text fade-in-up">今日口粮</view>
+
+  <!-- 主菜名 -->
+  <view class="result-name title-xl fade-in-up">{{winner.name}}</view>
+
+  <!-- 推荐语 -->
+  <view class="result-desc fade-in-up" wx:if="{{winner.desc}}">
+    "{{winner.desc}}"
+  </view>
+
+  <!-- 标签 -->
+  <view class="result-tags fade-in-up">
+    <view wx:for="{{tags}}" wx:key="index" class="tag">{{item}}</view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="result-actions fade-in-up">
+    <button class="btn-primary" bindtap="onSaveResult">💾 保存结果</button>
+    <button class="btn-secondary result-share-btn" open-type="share">分享给朋友</button>
+    <view class="restart-link hint-text" bindtap="onRestart">再来一局 →</view>
+  </view>
+
+</view>

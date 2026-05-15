@@ -1,0 +1,72 @@
+/* pages/index/index.wxss */
+
+.index-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 80rpx 40rpx;
+}
+
+.hero-area {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.hero-emoji {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.hero-title {
+  font-size: 64rpx;
+  font-weight: 800;
+  margin-bottom: 16rpx;
+}
+
+.accent {
+  color: #FF6B35;
+}
+
+.hero-subtitle {
+  color: #9CA3AF;
+  font-size: 28rpx;
+  margin-top: 16rpx;
+}
+
+.start-card {
+  width: 100%;
+  text-align: center;
+}
+
+.start-card-desc {
+  color: #6B7280;
+  font-size: 28rpx;
+  line-height: 1.8;
+  margin-bottom: 40rpx;
+}
+
+.newline {
+  display: block;
+}
+
+.start-btn {
+  font-size: 36rpx;
+  padding: 32rpx;
+}
+
+.bottom-actions {
+  margin-top: 32rpx;
+}
+
+.footer-hint {
+  position: fixed;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 22rpx;
+  color: #D1D5DB;
+}

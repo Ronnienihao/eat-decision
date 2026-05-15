@@ -1,0 +1,34 @@
+<!-- pages/index/index.wxml - 首页 -->
+<view class="container index-container">
+  
+  <!-- 顶部装饰 -->
+  <view class="hero-area fade-in-up">
+    <view class="hero-emoji">🍜</view>
+    <view class="title-xl hero-title">今天<text class="accent">吃什么</text>？</view>
+    <view class="hero-subtitle">别纠结了，让命运决定</view>
+  </view>
+
+  <!-- 开始卡片 -->
+  <view class="card start-card fade-in-up">
+    <view class="start-card-desc">
+      5轮偏好筛选 + 7轮擂台对决
+      <text class="newline">找到你今天真正想吃的那道菜</text>
+    </view>
+    <button class="btn-primary start-btn" bindtap="onStartGame">
+      开始决定 🎯
+    </button>
+  </view>
+
+  <!-- 历史记录入口 -->
+  <view class="bottom-actions fade-in-up" wx:if="{{hasHistory}}">
+    <view class="hint-text" bindtap="onGoHistory">
+      查看我的历史记录 →
+    </view>
+  </view>
+
+  <!-- 底部小字 -->
+  <view class="footer-hint hint-text">
+    胃比脑子诚实
+  </view>
+
+</view>

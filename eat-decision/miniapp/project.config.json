@@ -1,0 +1,35 @@
+{
+  "description": "项目配置文件",
+  "projectname": "eat-decision",
+  "appid": "wx06356d564d0219b5",
+  "compileType": "miniprogram",
+  "libVersion": "3.4.3",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "setting": {
+    "coverView": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "newFeature": false,
+    "bigPackageSizeSupport": true,
+    "autoAudits": false,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "useIsolateContext": true,
+    "userConfirmedBundleSwitch": false,
+    "uploadWithSourceMap": true,
+    "artifactSizeLimit": 0
+  },
+  "condition": {}
+}

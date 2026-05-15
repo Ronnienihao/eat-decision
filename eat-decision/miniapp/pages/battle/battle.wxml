@@ -1,0 +1,67 @@
+<!-- pages/battle/battle.wxml - 擂台 PK 页 -->
+<view class="container battle-container">
+
+  <!-- 筛选标签（顶部常驻） -->
+  <view class="tags-bar">
+    <view wx:for="{{tags}}" wx:key="index" class="tag">{{item}}</view>
+  </view>
+
+  <!-- 进度 -->
+  <view class="round-info hint-text">
+    第 {{currentRound}} / {{totalRounds}} 轮
+  </view>
+
+  <!-- PK 区域 -->
+  <view class="battle-area fade-in-up" wx:if="{{!isOver}}">
+    
+    <!-- 挑战者 A（当前卫冕） -->
+    <view
+      class="dish-card {{selectedDish === 'A' ? 'dish-selected' : ''}} {{selectedDish === 'B' ? 'dish-faded' : ''}}"
+      bindtap="onSelectDish"
+      data-side="A"
+    >
+      <view class="dish-badge">👑 卫冕</view>
+      <view class="dish-name">{{dishA.name}}</view>
+      <view class="dish-desc hint-text">{{dishA.desc}}</view>
+    </view>
+
+    <!-- VS -->
+    <view class="vs-divider">
+      <view class="vs-circle">VS</view>
+    </view>
+
+    <!-- 挑战者 B -->
+    <view
+      class="dish-card {{selectedDish === 'B' ? 'dish-selected' : ''}} {{selectedDish === 'A' ? 'dish-faded' : ''}}"
+      bindtap="onSelectDish"
+      data-side="B"
+    >
+      <view class="dish-badge challenger-badge">⚔️ 挑战者</view>
+      <view class="dish-name">{{dishB.name}}</view>
+      <view class="dish-desc hint-text">{{dishB.desc}}</view>
+    </view>
+
+  </view>
+
+  <!-- 0道菜兜底 -->
+  <view class="card empty-card fade-in-up" wx:if="{{isEmpty}}">
+    <view class="empty-emoji">🫥</view>
+    <view class="title-md empty-title">有 0 道菜适合你</view>
+    <view class="empty-desc hint-text">
+      该结果产生概率：0.0001%
+      <text class="newline">你成功筛出了宇宙最难伺候的嘴。</text>
+    </view>
+    <button class="btn-primary empty-btn" bindtap="onRestart">再来一局</button>
+  </view>
+
+  <!-- 催促提示 -->
+  <view class="urge-toast {{showUrgeToast ? 'toast-show' : ''}}">
+    别想了，胃比脑子诚实
+  </view>
+
+  <view class="urge-bubble {{showUrgeBubble ? 'bubble-show' : ''}}">
+    <view class="bubble-text">你已经盯着它 10 秒了！饿着肚子做决定会更痛苦</view>
+    <view class="bubble-close" bindtap="onCloseBubble">好好好我选了</view>
+  </view>
+
+</view>

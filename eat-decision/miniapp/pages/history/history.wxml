@@ -1,0 +1,28 @@
+<!-- pages/history/history.wxml - 历史记录页 -->
+<view class="container history-container">
+
+  <view class="title-lg history-title">我的历史记录</view>
+
+  <!-- 有记录 -->
+  <block wx:if="{{records.length > 0}}">
+    <view class="record-list">
+      <view class="card record-item fade-in-up" wx:for="{{records}}" wx:key="id">
+        <view class="record-header">
+          <view class="record-dish">{{item.dishName}}</view>
+          <view class="record-date hint-text">{{item.date}}</view>
+        </view>
+        <view class="record-tags">
+          <view wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag" class="tag">{{tag}}</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 无记录 -->
+  <view class="empty-state" wx:else>
+    <view class="empty-emoji">📋</view>
+    <view class="hint-text">还没有历史记录</view>
+    <view class="hint-text">保存游戏结果后在这里查看</view>
+  </view>
+
+</view>
