@@ -1,7 +1,7 @@
 // utils/api.js
 // 后端 API 封装
 
-const BASE_URL = 'https://your-server.com/api'  // TODO: 替换为实际后端地址
+const BASE_URL = 'http://43.128.123.207:3001/api'  // TODO: 替换为实际后端地址
 
 /**
  * 通用请求封装
