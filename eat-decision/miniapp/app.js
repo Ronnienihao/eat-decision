@@ -27,7 +27,7 @@ App({
     wx.request({
       url: this.globalData.apiBase + '/api/dishes',
       method: 'GET',
-      timeout: 20000,  // 20秒超时
+      timeout: 60000,  // 60秒超时，给足加载时间
       success: (res) => {
         wx.hideLoading()
         console.log('API 响应:', res.statusCode, res.data ? `total=${res.data.total}` : 'no data')
