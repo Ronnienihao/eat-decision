@@ -1,72 +1,134 @@
 // app.js
-const { normalizeDish, MOCK_DISHES } = require('./utils/dishes')
-
 App({
   globalData: {
-    // 当前游戏会话状态
     session: {
-      answers: {},       // { q01: 'A', q02: 'A', q03: 'B', q04: '川湘菜', q05: '爆炒' }
-      tags: [],          // 最终标签数组，传给 PK 阶段
-      candidates: [],    // 候选菜品列表
-      battleWinner: null // 最终胜出菜品
+      answers: {},
+      tags: [],
+      candidates: [],
+      battleWinner: null
     },
-    // 菜品库（从后端 API 加载）
     allDishes: [],
     dishesLoaded: false,
-    // 用户信息
-    userInfo: null,
-    openid: wx.getStorageSync('openid') || null
+    apiBase: 'http://43.128.123.207:3000'
   },
 
   onLaunch() {
     console.log('App launched, appid: wx06356d564d0219b5')
-    this._loadDishes()
+    this._loadDishesWithRetry(3)
   },
 
   /**
-   * 加载菜品数据
-   * 优先从后端 API 获取，失败则使用缓存，再失败用 mock
+   * 带重试的加载
    */
-  _loadDishes() {
-    // 先检查本地缓存
-    const cached = wx.getStorageSync('dishes_cache')
-    const cacheTime = wx.getStorageSync('dishes_cache_time') || 0
-    const ONE_DAY = 24 * 60 * 60 * 1000
+  _loadDishesWithRetry(remain) {
+    console.log(`📡 尝试加载菜品库，剩余重试次数: ${remain}`)
+    wx.showLoading({ title: '加载菜品库...' })
 
-    if (cached && cached.length > 0 && Date.now() - cacheTime < ONE_DAY) {
+    wx.request({
+      url: this.globalData.apiBase + '/api/dishes',
+      method: 'GET',
+      timeout: 20000,  // 20秒超时
+      success: (res) => {
+        wx.hideLoading()
+        console.log('API 响应:', res.statusCode, res.data ? `total=${res.data.total}` : 'no data')
+        
+        if (res.statusCode === 200 && res.data && res.data.dishes) {
+          this.globalData.allDishes = res.data.dishes
+          this.globalData.dishesLoaded = true
+          console.log(`✅ 菜品库加载成功: ${res.data.dishes.length} 道菜`)
+          wx.setStorageSync('dishes_cache', res.data.dishes)
+        } else {
+          console.error('API 返回异常:', res.statusCode, res.data)
+          this._loadFromCacheOrMock()
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        console.error('菜品库加载失败:', err.errMsg || err.message || err)
+        
+        if (remain > 1) {
+          console.log(`⏳ ${remain - 1} 秒后重试...`)
+          setTimeout(() => this._loadDishesWithRetry(remain - 1), 1500)
+        } else {
+          console.log('⚠️ 重试次数用完，使用缓存或 mock')
+          this._loadFromCacheOrMock()
+        }
+      }
+    })
+  },
+
+  /**
+   * 回退到缓存或 mock
+   */
+  _loadFromCacheOrMock() {
+    const cached = wx.getStorageSync('dishes_cache')
+    if (cached && cached.length > 0) {
       this.globalData.allDishes = cached
       this.globalData.dishesLoaded = true
-      console.log(`菜品库已从缓存加载: ${cached.length} 道菜`)
+      console.log(`菜品库从缓存加载: ${cached.length} 道菜`)
       return
     }
 
-    // TODO: 从后端 API 获取
-    // 后端 API 未就绪时，使用 mock 数据
-    // wx.request({
-    //   url: 'https://your-server.com/api/dishes',
-    //   success: (res) => {
-    //     const dishes = res.data.map(r => normalizeDish(r)).filter(Boolean)
-    //     this.globalData.allDishes = dishes
-    //     this.globalData.dishesLoaded = true
-    //     wx.setStorageSync('dishes_cache', dishes)
-    //     wx.setStorageSync('dishes_cache_time', Date.now())
-    //   },
-    //   fail: () => {
-    //     this._useMockDishes()
-    //   }
-    // })
-
-    // 当前使用 mock 数据（后端就绪后替换）
-    this._useMockDishes()
-  },
-
-  _useMockDishes() {
+    const { MOCK_DISHES } = require('./utils/dishes')
     this.globalData.allDishes = MOCK_DISHES
     this.globalData.dishesLoaded = true
-    console.log(`菜品库使用 mock 数据: ${MOCK_DISHES.length} 道菜`)
+    console.log(`菜品库使用 mock: ${MOCK_DISHES.length} 道菜`)
   },
 
-  // 重置游戏会话
+  /**
+   * 筛选候选菜品
+   */
+  filterCandidates(answers) {
+    const dishes = this.globalData.allDishes
+    if (!dishes || dishes.length === 0) return []
+
+    let result = [...dishes]
+
+    if (answers.q01) {
+      result = result.filter(d => d.category === answers.q01)
+    }
+
+    const attrAnswers = [answers.q02, answers.q03].filter(Boolean)
+    if (attrAnswers.length > 0) {
+      result = result.filter(d =>
+        attrAnswers.some(attr => d.attributes && d.attributes.includes(attr))
+      )
+    }
+
+    if (answers.q04) {
+      result = result.filter(d => d.region === answers.q04)
+    }
+
+    if (answers.q05) {
+      result = result.filter(d => d.cooking === answers.q05)
+    }
+
+    return result
+  },
+
+  getCandidateCount(answers) {
+    return this.filterCandidates(answers).length
+  },
+
+  refreshDishes() {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: this.globalData.apiBase + '/api/refresh',
+        method: 'GET',
+        timeout: 10000,
+        success: (res) => {
+          if (res.statusCode === 200 && res.data && res.data.dishCount) {
+            this._loadDishesWithRetry(1)
+            resolve(res.data.dishCount)
+          } else {
+            reject(new Error('刷新失败'))
+          }
+        },
+        fail: reject
+      })
+    })
+  },
+
   resetSession() {
     this.globalData.session = {
       answers: {},
