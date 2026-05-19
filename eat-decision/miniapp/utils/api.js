@@ -1,7 +1,7 @@
 // utils/api.js
 // 后端 API 封装
 
-const BASE_URL = 'http://43.128.123.207:3000/api'  // TODO: 替换为实际后端地址
+const BASE_URL = 'https://athens-acting-tend-jimmy.trycloudflare.com/api'  // TODO: 替换为实际后端地址
 
 /**
  * 通用请求封装

@@ -9,7 +9,7 @@ App({
     },
     allDishes: [],
     dishesLoaded: false,
-    apiBase: 'http://43.128.123.207:3000'
+    apiBase: 'https://athens-acting-tend-jimmy.trycloudflare.com'
   },
 
   onLaunch() {
