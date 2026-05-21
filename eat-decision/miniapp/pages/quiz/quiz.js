@@ -158,7 +158,7 @@ Page({
     console.log(`=== 当前进度: step=${step}, 候选=${count} ===`)
     this.setData({ debugInfo: `step${step+1} | 候选: ${count} 道菜` })
 
-    const shouldSkip = count > 0 && count < 30
+    const shouldSkip = count > 0 && count < 60
 
     if (step === 4 || shouldSkip) {
       const candidates = app.filterCandidates(currentAnswers)
