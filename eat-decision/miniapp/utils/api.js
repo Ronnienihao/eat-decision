@@ -1,7 +1,7 @@
 // utils/api.js
 // 后端 API 封装
 
-const BASE_URL = 'https://athens-acting-tend-jimmy.trycloudflare.com/api'  // TODO: 替换为实际后端地址
+const BASE_URL = 'https://eatoday.work/api'
 
 /**
  * 通用请求封装

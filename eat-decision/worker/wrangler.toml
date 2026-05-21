@@ -1,0 +1,4 @@
+name = "eat-decision-api"
+main = "index.js"
+compatibility_date = "2026-05-18"
+account_id = "feb5b2d5af6bf2771ed0a81722e852eb"

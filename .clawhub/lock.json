@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "skills": {
+    "tavily-search": {
+      "version": "1.0.0",
+      "installedAt": 1773220487343
+    },
+    "summarize": {
+      "version": "1.0.0",
+      "installedAt": 1773220489083
+    },
+    "agent-browser": {
+      "version": "0.2.0",
+      "installedAt": 1779345746870
+    },
+    "find-skills": {
+      "version": "0.1.0",
+      "installedAt": 1773220492252
+    },
+    "github": {
+      "version": "1.0.0",
+      "installedAt": 1773220493825
+    },
+    "obsidian": {
+      "version": "1.0.0",
+      "installedAt": 1773220495419
+    },
+    "weather": {
+      "version": "1.0.0",
+      "installedAt": 1773220497234
+    },
+    "tencentcloud-lighthouse-skill": {
+      "version": "1.0.0",
+      "installedAt": 1773220499277
+    },
+    "tencent-docs": {
+      "version": "1.0.7",
+      "installedAt": 1773220501186
+    },
+    "tencent-cos-skill": {
+      "version": "1.0.6",
+      "installedAt": 1773220503352
+    },
+    "deploy-agent": {
+      "version": "1.1.0",
+      "installedAt": 1776179392049
+    },
+    "cloudflare-toolkit": {
+      "version": "1.5.0",
+      "installedAt": 1776179404057
+    },
+    "web": {
+      "version": "",
+      "installedAt": 1776179423357
+    },
+    "coding": {
+      "version": "1.0.3",
+      "installedAt": 1776179953149
+    },
+    "memory-manager": {
+      "version": "1.0.0",
+      "installedAt": 1776179956591
+    },
+    "memory-system-v2": {
+      "version": "1.0.0",
+      "installedAt": 1776179963908
+    },
+    "agentic-coding": {
+      "version": "1.0.0",
+      "installedAt": 1776179984559
+    },
+    "vibe-coding": {
+      "version": "1.0.0",
+      "installedAt": 1776179988409
+    },
+    "design-system-polisher": {
+      "version": "1.0.0",
+      "installedAt": 1776184107872
+    },
+    "product-analysis": {
+      "version": "1.1.0",
+      "installedAt": 1776184109996
+    },
+    "wechat-mini-app": {
+      "version": "2.3.6",
+      "installedAt": 1777395283086
+    },
+    "web-tools-guide": {
+      "version": "1.0.2",
+      "installedAt": 1779074866615
+    },
+    "humanizer": {
+      "version": "1.0.0",
+      "installedAt": 1779345659828
+    },
+    "skill-vetter": {
+      "version": "1.0.0",
+      "installedAt": 1779346127105
+    },
+    "ai-fact-checker": {
+      "version": "1.1.0",
+      "installedAt": 1779346577258
+    },
+    "anti-hallucination": {
+      "version": "1.0.0",
+      "installedAt": 1779355643934
+    },
+    "image-vision": {
+      "version": "1.0.0",
+      "installedAt": 1779362870581
+    }
+  }
+}

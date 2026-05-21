@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "skills": {
+    "deploy-agent": {
+      "name": "C.R.A.B Deploy Agent",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=deploy-agent",
+      "source": "skillhub",
+      "version": "1.1.0"
+    },
+    "cloudflare-toolkit": {
+      "name": "Cloudflare",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=cloudflare-toolkit",
+      "source": "skillhub",
+      "version": "1.5.0"
+    },
+    "web": {
+      "name": "web",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=web",
+      "source": "skillhub",
+      "version": ""
+    },
+    "coding": {
+      "name": "Coding",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=coding",
+      "source": "skillhub",
+      "version": "1.0.3"
+    },
+    "memory-manager": {
+      "name": "Memory Manager",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=memory-manager",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "memory-system-v2": {
+      "name": "Memory System V2",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=memory-system-v2",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "agentic-coding": {
+      "name": "Agentic Coding",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=agentic-coding",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "vibe-coding": {
+      "name": "Vibe Coding",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=vibe-coding",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "design-system-polisher": {
+      "name": "design-system-polisher",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=design-system-polisher",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "product-analysis": {
+      "name": "product-analysis",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=product-analysis",
+      "source": "skillhub",
+      "version": "1.1.0"
+    },
+    "wechat-mini-app": {
+      "name": "Wechat Mini App",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=wechat-mini-app",
+      "source": "skillhub",
+      "version": "2.3.6"
+    },
+    "humanizer": {
+      "name": "Humanizer",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=humanizer",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-05-21T06:40:59Z"
+    },
+    "agent-browser": {
+      "name": "Agent Browser",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=agent-browser",
+      "source": "community",
+      "version": "0.2.0",
+      "installedAt": "2026-05-21T06:42:26Z"
+    },
+    "skill-vetter": {
+      "name": "Skill Vetter",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=skill-vetter",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-05-21T06:48:47Z"
+    },
+    "ai-fact-checker": {
+      "name": "Ai Fact Checker",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=ai-fact-checker",
+      "source": "community",
+      "version": "1.1.0",
+      "installedAt": "2026-05-21T06:56:17Z"
+    },
+    "anti-hallucination": {
+      "name": "Anti-Hallucination 防胡编卫士",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=anti-hallucination",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-05-21T09:27:23Z"
+    },
+    "image-vision": {
+      "name": "Image Vision",
+      "zip_url": "https://lightmake.site/api/v1/download?slug=image-vision",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-05-21T11:27:50Z"
+    }
+  }
+}

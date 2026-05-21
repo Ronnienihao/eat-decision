@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>致命反派原型测试</title>
+    <style>
+        body { background: #0a0a0a; color: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { text-align: center; max-width: 600px; padding: 20px; }
+        .btn { padding: 15px 40px; border: 1px solid #e0e0e0; cursor: pointer; background: transparent; color: #e0e0e0; font-size: 1.2rem; transition: 0.3s; }
+        .btn:hover { background: #e0e0e0; color: #0a0a0a; }
+        .hidden { display: none; }
+        .option { display: block; margin: 15px auto; padding: 20px; border: 1px solid #333; cursor: pointer; width: 90%; transition: 0.2s; text-align: left; }
+        .option:hover { border-color: #e0e0e0; background: #1a1a1a; }
+        h1 { font-weight: 300; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+<div id="start-screen" class="container">
+    <h1>致命反派原型测试</h1>
+    <p>这里没有圣人。请选出最接近你第一反应的那个选项。</p>
+    <button class="btn" onclick="startTest()">[START]</button>
+</div>
+
+<div id="quiz-screen" class="container hidden">
+    <h3 id="question-num"></h3>
+    <p id="question-text"></p>
+    <div id="options"></div>
+</div>
+
+<div id="result-screen" class="container hidden">
+    <h1 id="res-title"></h1>
+    <p id="res-desc"></p>
+    <button class="btn" onclick="location.reload()">重新测试</button>
+</div>
+
+<script>
+const questions = [
+    { q: "01. 你无意中发现，你最好的几个朋友建了一个没有你的小群，周末还背着你偷偷聚餐，以下选项你更倾向...？", opts: [{t:"A. 在原本的大群里发截图，配上一句：“祝你们吃得开心”，然后直接退群。", v:"Heat"}, {t:"B. 当作不知道。但接下来的几周，你会刻意只邀请其中那个“最容易倒戈”的人一起玩，内部瓦解。", v:"Mist"}, {t:"C. 立刻把他们从你的核心人脉圈降级。不吵闹，默默开始结交更高阶的圈子。", v:"Cold"}]},
+    { q: "02. 开会时，一个讨厌的同事把你昨天私下跟 ta 聊过的创意，当成 ta 自己的想法汇报给了老板。你内心的第一反应是？", opts: [{t:"A. 笑着插话：“我很高兴你把我们昨天下午讨论的方案整理出来了，那我来补充核心细节吧。”", v:"Mist"}, {t:"B. 绝不惯着，直接打断：“等一下，这明明是我昨天原封不动发给你的想法。”", v:"Heat"}, {t:"C. 表面不动声色让 ta 汇报。因为你留了一个坑，等 ta 下周执行搞砸时，你再接管。", v:"Cold"}]},
+    { q: "03. 在酒吧，你撞见了前任，ta 身边带了一个看起来比你更有钱、更完美的现任。遇到这种场面，你会...？", opts: [{t:"A. 走过去极其自然地跟那位现任搭话，散发魅力，让现任觉得你不可思议地有趣，留下前任尴尬。", v:"Mist"}, {t:"B. 远远地点个头，然后给自己点杯最烈的酒，头也不回地离开。", v:"Cold"}, {t:"C. 走过去打招呼，但在对话中看似不经意地提起前任某个极其私密且尴尬的小习惯，确立主导权。", v:"Heat"}]},
+    { q: "04. 那个曾经极其恶劣地伤害过你的人，突然发来了一篇极其诚恳的道歉小作文。你通常会怎么处理？", opts: [{t:"A. 已读，不回。沉默就是最极致的惩罚。", v:"Cold"}, {t:"B. 回复一句极其简短、直击痛处的话：“你感动自己的样子真可悲”，然后直接拉黑。", v:"Heat"}, {t:"C. 大度地接受道歉。但你会把这份“愧疚”转化为永久的社交筹码，随时操控。", v:"Mist"}]},
+    { q: "05. 你听到了一个关于某人的毁灭性八卦，但你知道这是假的。重点是，你其实挺讨厌这个被造谣的人，你会倾向于...？", opts: [{t:"A. 假装不经意地在另一个大嘴巴同事面前“说漏嘴”。流言会自己长翅膀。", v:"Mist"}, {t:"B. 把真相藏在心里，什么也不说。等那个人陷入绝境时，你的真相可以卖个好价钱。", v:"Cold"}, {t:"C. 找到造谣的人当面对质。不是为了帮那个你讨厌的人，而是为了享受“只有我能掌控真相”的权力。", v:"Heat"}]},
+    { q: "06. 你在交友软件上配对了一个极其性感、但开场白略显傲慢和挑衅的人。你觉得哪种反击最像你？", opts: [{t:"A. 晾 ta 两天。然后再回一句极其简短、毫无情绪波澜的话，降维打击。", v:"Cold"}, {t:"B. 用同样傲慢且更有攻击性的话怼回去。要在第一回合就建立绝对的气场压制。", v:"Heat"}, {t:"C. 顺着 ta 的傲慢极其幽默地附和，但在句末抛出一个极其暧昧的钩子，把主导权偷过来。", v:"Mist"}]},
+    { q: "07. 第一次约会，空气中弥漫着极其强烈的性张力。在潜意识里，你会如何控制这场约会的节奏？", opts: [{t:"A. 保持恰到好处的物理距离，但用极具侵略性的眼神盯着对方。让 ta 在等待中煎熬。", v:"Cold"}, {t:"B. 制造看似不经意的触碰，每次靠近都让人心跳加速，然后又若无其事地拉开距离。", v:"Mist"}, {t:"C. 直接打破安全距离，主导肢体接触，让对方连呼吸的节奏都只能跟着你走。", v:"Heat"}]},
+    { q: "08. 在派对上，有人正在试图搭讪那个你已经看上的“猎物”。面对这种挑衅，你会怎么做？", opts: [{t:"A. 直接走过去插话，用气场屏蔽那个竞争者，把猎物带离现场。", v:"Heat"}, {t:"B. 坐在原地，举起酒杯隔空和你的猎物对视一眼。那是一记“你真的要选那种货色吗”的眼神。", v:"Cold"}, {t:"C. 加入对话，和竞争者称兄道弟，在不知不觉的暗讽中让竞争者看起来像个无趣的小丑。", v:"Mist"}]},
+    { q: "09. 极其完美的一夜过后。当清晨的第一缕阳光照进来，你骨子里最想做的常规操作是？", opts: [{t:"A. 在对方醒来前穿戴整齐，留下一张克制但不失礼貌的字条离开。", v:"Cold"}, {t:"B. 像个完美恋人一样为 ta 煮好咖啡，然后在接下来的几天突然冷淡撤退，让 ta 患得患失。", v:"Mist"}, {t:"C. 继续缠绵，把 ta 重新拉回怀里。今天什么时候起床，由你说了算。", v:"Heat"}]},
+    { q: "10. 当你知道某人已经完全为你着迷了，你潜意识里最喜欢用哪种方式在感情里“折磨” ta？", opts: [{t:"A. 变成 ta 潜意识里最渴望的那个幻象，让 ta 爱上那个你为 ta 量身定制的倒影。", v:"Mist"}, {t:"B. 给 ta 极其浓烈、让 ta 窒息的关注，然后毫无预兆地全部抽走。", v:"Heat"}, {t:"C. 在 99% 的时间里保持高冷，只在 ta 快要绝望时，施舍 1% 的温柔。", v:"Cold"}]},
+    { q: "11. 你因为某种意外，得到了一笔永远查不到你头上的巨额匿名财富。你内心最爽的“私人开销”是用来干嘛？", opts: [{t:"A. 匿名买下看不起你的人的债务。从今以后，你就是他们真正的债主。", v:"Possession"}, {t:"B. 雇佣公关，把你平庸的过往包装成传奇故事，让所有圈内人膜拜你。", v:"Vanity"}, {t:"C. 匿名资助那个曾经打压你的前老板的最大竞争对手。看着他一步步失去他最在乎的心血。", v:"Destruction"}]},
+    { q: "12. 你正在为了一个关键的职位和死对头拼命内卷。夜深人静时，你承认你这么拼到底是为了什么？", opts: [{t:"A. 为了在全员大会上享受所有人仰望你的目光，以及享受死对头那充满嫉妒和挫败的眼神。", v:"Vanity"}, {t:"B. 宁愿把桌子掀了，也不愿意让 ta 赢。", v:"Destruction"}, {t:"C. 为了签字权、预算调配权和实际的资源。你要的是建立自己的地盘。", v:"Possession"}]},
+    { q: "13. 如果你当年随手写的一段文字，曾被一个傲慢的大佬嘲笑。十年后，他却高价求购这个作品。你会倾向于？", opts: [{t:"A. 绝对不卖。直接公开身份，让他知道他渴求的东西永远掌握在你这个“垃圾”手里。", v:"Possession"}, {t:"B. 卖给他，但在交易完成、他大肆炫耀之后，公开当年他嘲笑你的截图，让他成为笑话。", v:"Vanity"}, {t:"C. 匿名把版权免费开放给所有人。让他觉得独一无二的宝物烂大街。", v:"Destruction"}]},
+    { q: "14. 如果你的气场可以不知不觉地给周围人“催眠”，你希望当人们靠近你时，他们会产生哪种感受？", opts: [{t:"A. “在这人面前，我必须小心翼翼，并极其渴望得到 ta 的认可。”", v:"Possession"}, {t:"B. “这人太危险了，和 ta 待在一起，我原有的原则和底线似乎都会失效。”", v:"Destruction"}, {t:"C. “这人就像一个完美的幻影，让我忍不住想要追随甚至模仿。”", v:"Vanity"}]},
+    { q: "15. 把灯关掉后，你在亲密关系中最底层的心理渴求是什么？", opts: [{t:"A. 绝对的崇拜。希望被当作一件不可亵渎的艺术品一样被凝视和侍奉。", v:"Vanity"}, {t:"B. 绝对的臣服。看到对方交出主导权，连情绪都随着你的节奏起伏。", v:"Possession"}, {t:"C. 打破边界。游走在危险和禁忌的边缘，寻求那种几乎要撕裂理智的极致体验。", v:"Destruction"}]},
+    { q: "16. 你最容易被哪种人吸引？", opts: [{t:"A. 那些桀骜不驯、充满边缘感的人。想看看谁能把对方烧成灰。", v:"Destruction"}, {t:"B. 那些在世俗意义上极其完美、高不可攀的人。作为你的顶级战利品。", v:"Vanity"}, {t:"C. 那些看似坚强但藏着软肋的人。彻底接管他们的人生。", v:"Possession"}]},
+    { q: "17. 当你对一段关系感到彻底厌倦，你的完美“谢幕台词”会是什么基调？", opts: [{t:"A. “我太复杂也太危险了，你确实承受不起。”", v:"Vanity"}, {t:"B. 极其残忍、精准地指出对方让你失去兴趣的那个缺点，戳破 ta 的自尊心。", v:"Destruction"}, {t:"C. “你可以走，但我保证，你这辈子再也找不到任何人能像我一样看透并包容你的阴暗面。”", v:"Possession"}]},
+    { q: "18. 前任邀请你去 ta 的婚礼。你决定盛装出席的原因是？", opts: [{t:"A. 穿得极其惊艳且压迫感十足，确保镜头和目光都在你身上，让新郎/新娘沦为配角。", v:"Vanity"}, {t:"B. 为了对视一秒。确认 ta 的心里依然有你的烙印。", v:"Possession"}, {t:"C. 极其自然地碰杯，微笑着留下一句模棱两可、让对方余生都会暗自猜忌的话。", v:"Destruction"}]},
+    { q: "19. 某个人居然不知好歹地拒绝了你的魅力。即使表面风平浪静，你在心里会如何消化？", opts: [{t:"A. 只要是你看上的，就没有得不到的。把它当成一场长线战役，慢慢寻找软肋。", v:"Possession"}, {t:"B. 把这个人当成笑话。并在圈子里散播“ta 根本配不上我”的舆论。", v:"Vanity"}, {t:"C. 迅速撩拨 ta 圈子里那个一直和 ta 暗中攀比的人。用你的偏爱，挑拨离间。", v:"Destruction"}]},
+    { q: "20. 如果你的人生是一部暗黑电影，你幻想的最终结局画面是什么？", opts: [{t:"A. 一座以你的名字命名的巨大美术馆，后人们站在你的画像前膜拜你的品味。", v:"Vanity"}, {t:"B. 你坐在巨大长桌的尽头，所有人为你效忠，规则由你书写。", v:"Possession"}, {t:"C. 虚伪的秩序崩塌，而你点燃一支烟，头也不回地走进迷雾。", v:"Destruction"}]
+];
+
+let scores = { Cold:0, Heat:0, Mist:0, Possession:0, Destruction:0, Vanity:0 };
+let currentIdx = 0;
+
+const archetypes = {
+    "Cold": {
+        "Possession": { n: "钻石继承人", d: "极其昂贵、坚硬且冷血的掠夺者。你视人为资产，只做绝对盈利的交易。" },
+        "Destruction": { n: "玻璃刀锋", d: "无声且锋利。你的乐趣在于冷静地寻找猎物人生的承重墙，然后轻轻抽走最关键的一块砖。" },
+        "Vanity": { n: "象牙恶德", d: "高高在上、不可亵渎的病态自恋狂。你追求无瑕的自我形象，别人必须像供奉艺术品一样纯净。" }
+    },
+    "Heat": {
+        "Possession": { n: "镀金野兽", d: "披着财富与权力外衣的野心家。你想要的世界，会直接用绝对的力量和气场去夺取。" },
+        "Destruction": { n: "野火之吻", d: "带着浪漫毁灭欲的狂热者。所到之处寸草不生，只享受在悬崖边双双坠落的极致张力。" },
+        "Vanity": { n: "猩红狂喜", d: "极度纵欲、渴望聚光灯的绚丽殉道者。必须在所有人毁灭性的注视中达到高潮。" }
+    },
+    "Mist": {
+        "Possession": { n: "丝绸掠食者", d: "懂得降维打击的诱导者。编织出最甜蜜的网，让猎物心甘情愿地交出控制权。" },
+        "Destruction": { n: "淬银之舌", d: "高阶欺诈师。最擅长从内部解构秩序，看猎物在自我怀疑中崩溃。" },
+        "Vanity": { n: "天鹅绒谎言", d: "柔软、华丽的完美幻象。为猎物量身定制最渴望的伴侣形象，而你只享受被神化的过程。" }
+    }
+};
+
+function startTest() {
+    document.getElementById('start-screen').classList.add('hidden');
+    document.getElementById('quiz-screen').classList.remove('hidden');
+    showQuestion();
+}
+
+function showQuestion() {
+    const q = questions[currentIdx];
+    document.getElementById('question-num').innerText = "第 " + (currentIdx + 1) + " / 20 题";
+    document.getElementById('question-text').innerText = q.q.split('题干：')[1] ? q.q.split('题干：')[1] : q.q.split('. ')[1];
+    
+    const opts = document.getElementById('options');
+    opts.innerHTML = '';
+    q.opts.forEach(o => {
+        const b = document.createElement('div');
+        b.className = 'option';
+        b.innerText = o.t.split('. ')[1] ? o.t.split('. ')[1] : o.t;
+        b.onclick = function() { 
+            scores[o.v]++; 
+            currentIdx++; 
+            if(currentIdx < 20) {
+                showQuestion(); 
+            } else {
+                showResult();
+            }
+        };
+        opts.appendChild(b);
+    });
+}
+
+function showResult() {
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('result-screen').classList.remove('hidden');
+    
+    const axisA = ['Cold', 'Heat', 'Mist'].reduce((a, b) => scores[a] >= scores[b] ? a : b);
+    const axisB = ['Possession', 'Destruction', 'Vanity'].reduce((a, b) => scores[a] >= scores[b] ? a : b);
+    
+    const res = archetypes[axisA][axisB];
+    document.getElementById('res-title').innerText = res.n;
+    document.getElementById('res-desc').innerText = res.d;
+}
+</script>
+</body>
+</html>

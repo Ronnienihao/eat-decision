@@ -9,7 +9,7 @@ App({
     },
     allDishes: [],
     dishesLoaded: false,
-    apiBase: 'https://athens-acting-tend-jimmy.trycloudflare.com'
+    apiBase: 'https://eatoday.work'
   },
 
   onLaunch() {
