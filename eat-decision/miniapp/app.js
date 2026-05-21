@@ -14,69 +14,63 @@ App({
 
   onLaunch() {
     console.log('App launched, appid: wx06356d564d0219b5')
-    this._loadDishesWithRetry(3)
+    this._loadDishes()
   },
 
   /**
-   * 带重试的加载
+   * 加载菜品库
+   * 优先从缓存读取，再请求API，最后回退到mock
    */
-  _loadDishesWithRetry(remain) {
-    console.log(`📡 尝试加载菜品库，剩余重试次数: ${remain}`)
-    wx.showLoading({ title: '加载菜品库...' })
+  _loadDishes() {
+    // 1. 先检查缓存
+    const cached = wx.getStorageSync('dishes_cache')
+    if (cached && cached.length > 0) {
+      this.globalData.allDishes = cached
+      this.globalData.dishesLoaded = true
+      console.log(`📦 从缓存加载: ${cached.length} 道菜`)
+      return
+    }
 
+    // 2. 请求API
+    wx.showLoading({ title: '加载菜品库...' })
     wx.request({
-      url: this.globalData.apiBase + '/api/dishes',
+      url: 'https://eatoday.work/api/dishes',
       method: 'GET',
-      timeout: 60000,  // 60秒超时，给足加载时间
+      timeout: 30000,
       success: (res) => {
         wx.hideLoading()
-        console.log('API 响应:', res.statusCode, res.data ? `total=${res.data.total}` : 'no data')
-        
         if (res.statusCode === 200 && res.data && res.data.dishes) {
+          // 直接使用后端返回的结构，不需要 normalizeDish
+          // 后端字段: name, category, attributes, region, cooking, desc
           this.globalData.allDishes = res.data.dishes
           this.globalData.dishesLoaded = true
-          console.log(`✅ 菜品库加载成功: ${res.data.dishes.length} 道菜`)
           wx.setStorageSync('dishes_cache', res.data.dishes)
+          console.log(`✅ API 加载成功: ${res.data.dishes.length} 道菜`)
         } else {
-          console.error('API 返回异常:', res.statusCode, res.data)
-          this._loadFromCacheOrMock()
+          console.error('API 返回异常:', res)
+          this._useMockDishes()
         }
       },
       fail: (err) => {
         wx.hideLoading()
-        console.error('菜品库加载失败:', err.errMsg || err.message || err)
-        
-        if (remain > 1) {
-          console.log(`⏳ ${remain - 1} 秒后重试...`)
-          setTimeout(() => this._loadDishesWithRetry(remain - 1), 1500)
-        } else {
-          console.log('⚠️ 重试次数用完，使用缓存或 mock')
-          this._loadFromCacheOrMock()
-        }
+        console.error('API 请求失败:', err.errMsg)
+        this._useMockDishes()
       }
     })
   },
 
   /**
-   * 回退到缓存或 mock
+   * 使用 mock 数据（仅在 API 完全失败时使用）
    */
-  _loadFromCacheOrMock() {
-    const cached = wx.getStorageSync('dishes_cache')
-    if (cached && cached.length > 0) {
-      this.globalData.allDishes = cached
-      this.globalData.dishesLoaded = true
-      console.log(`菜品库从缓存加载: ${cached.length} 道菜`)
-      return
-    }
-
+  _useMockDishes() {
     const { MOCK_DISHES } = require('./utils/dishes')
     this.globalData.allDishes = MOCK_DISHES
     this.globalData.dishesLoaded = true
-    console.log(`菜品库使用 mock: ${MOCK_DISHES.length} 道菜`)
+    console.log(`⚠️ 使用 mock 数据: ${MOCK_DISHES.length} 道菜`)
   },
 
   /**
-   * 筛选候选菜品
+   * 根据用户答题筛选候选菜品
    */
   filterCandidates(answers) {
     const dishes = this.globalData.allDishes
@@ -84,10 +78,12 @@ App({
 
     let result = [...dishes]
 
+    // Q01：核心大类
     if (answers.q01) {
       result = result.filter(d => d.category === answers.q01)
     }
 
+    // Q02/Q03：属性（匹配任一属性即可）
     const attrAnswers = [answers.q02, answers.q03].filter(Boolean)
     if (attrAnswers.length > 0) {
       result = result.filter(d =>
@@ -95,10 +91,12 @@ App({
       )
     }
 
+    // Q04：地域
     if (answers.q04) {
       result = result.filter(d => d.region === answers.q04)
     }
 
+    // Q05：烹饪方式
     if (answers.q05) {
       result = result.filter(d => d.cooking === answers.q05)
     }
@@ -106,29 +104,16 @@ App({
     return result
   },
 
+  /**
+   * 获取当前候选数量（用于动态跳题）
+   */
   getCandidateCount(answers) {
     return this.filterCandidates(answers).length
   },
 
-  refreshDishes() {
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: this.globalData.apiBase + '/api/refresh',
-        method: 'GET',
-        timeout: 10000,
-        success: (res) => {
-          if (res.statusCode === 200 && res.data && res.data.dishCount) {
-            this._loadDishesWithRetry(1)
-            resolve(res.data.dishCount)
-          } else {
-            reject(new Error('刷新失败'))
-          }
-        },
-        fail: reject
-      })
-    })
-  },
-
+  /**
+   * 重置游戏会话
+   */
   resetSession() {
     this.globalData.session = {
       answers: {},
